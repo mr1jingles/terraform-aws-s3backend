@@ -30,25 +30,36 @@ data "aws_iam_policy_document" "policy_doc" {
     actions = [
       "s3:ListBucket",
     ]
+
     resources = [
       aws_s3_bucket.s3_bucket.arn
     ] 
   }
+
   statement {
     actions = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
+
     resources = [
       "${aws_s3_bucket.s3_bucket.arn}/*",
     ] 
   }
+
   statement {
     actions = [
       "dynamodb:GetItem",
       "dynamodb:PutItem",
       "dynamodb:DeleteItem"
     ]
-    resources = [
-      aws_dynamodb_table.dynamodb_table.arn,
-    ] 
+
+    resources = [aws_dynamodb_table.dynamodb_table.arn] 
+  }
+
+  statement {
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey"
+    ]
+    resources = [aws_kms_key.kms_key.arn]
   }
 }
 
